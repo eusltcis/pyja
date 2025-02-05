@@ -1,0 +1,397 @@
+
+class DaysReservationexception extends Exception {
+    public DaysReservationexception(String message) {
+        super(message);
+    }
+}
+
+class Hotel {
+    String hotelName;
+    int rank;
+    public static int availableRooms;
+
+    Hotel(String hotelName, int rank, int availableRooms) {
+        this.hotelName = hotelName;
+        this.rank = rank;
+        this.availableRooms = availableRooms;
+    }
+
+}
+
+class Room {
+    int roomId;
+    int price;
+    String type;
+
+    Room(int roomId, String type) {
+        this.roomId = roomId;
+        this.type = type;
+
+        Hotel.availableRooms++;
+
+        if (type.equals("Single")) {
+            this.price = 2000;
+        } else if (type.equals("Double")) {
+            this.price = 3500;
+        } else if (type.equals("Triple")) {
+            this.price = 5000;
+        } else {
+            System.out.println("Invalid Type of room");
+        }
+    }
+
+    void displayRoom() {
+        System.out.println("Room id : " + roomId);
+        System.out.println("Room price : " + price);
+        System.out.println("Room type : " + type);
+    }
+
+}
+
+class Resident {
+    int resId;
+    String name;
+    Room room;
+    int numOfDays;
+    int cost;
+
+    Resident(int resId, String name) {
+        this.resId = resId;
+        this.name = name;
+    }
+
+    void ReserveRoom(Room room, int numOfDays) throws DaysReservationexception {
+
+        if (numOfDays < 0) {
+            throw new DaysReservationexception("Num of days should be Greater than 0 ");
+        }
+
+        this.room = room;
+        this.cost = numOfDays * room.price;
+        Hotel.availableRooms--;
+
+        System.out.println("Available rooms : " + Hotel.availableRooms);
+
+    }
+
+    void displayResident() {
+        System.out.println("res id: " + resId);
+        System.out.println("res name: " + name);
+        room.displayRoom();
+        System.out.println("num of days staying : " + numOfDays);
+        System.out.println("total cost: " + cost);
+    }
+
+}
+
+class HotelManagement {
+
+    public static void main(String[] args) throws DaysReservationexception {
+        Hotel hotel = new Hotel("tceusl", 4, 0);
+
+        Room room1 = new Room(123, "Single");
+        Room room2 = new Room(124, "Double");
+        Room room3 = new Room(125, "Triple");
+
+        Resident res1 = new Resident(122, "Mike");
+        Resident res2 = new Resident(1239, "ben");
+        Resident res3 = new Resident(127, "june");
+
+        res1.ReserveRoom(room1, 5);
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+// Source code is decompiled from a .class file using FernFlower decompiler.
+import java.util.Scanner;
+
+public class Largest {
+   public Largest() {
+   }
+
+   static void findLargsetAndSecond(int[] var0) {
+      int var1 = var0[0];
+
+      int var2;
+      for(var2 = 1; var2 < var0.length; ++var2) {
+         if (var0[var2] >= var1) {
+            var1 = var0[var2];
+         }
+      }
+
+      System.out.println("Largest Number is : " + var1);
+      var2 = Integer.MIN_VALUE;
+
+      for(int var3 = 1; var3 < var0.length; ++var3) {
+         if (var0[var3] > var2 && var0[var3] != var1) {
+            var2 = var0[var3];
+         }
+      }
+
+      System.out.println("Second largest Number : " + var2);
+   }
+
+   public static void main(String[] var0) {
+      System.out.println("enter the Number of array Elements: ");
+      Scanner var1 = new Scanner(System.in);
+      int var2 = var1.nextInt();
+      if (var2 < 2) {
+         System.out.println("Please enter at least two elements.");
+      } else {
+         int[] var3 = new int[var2];
+         System.out.println("Enter the Elements : ");
+
+         int var4;
+         for(var4 = 0; var4 < var2; ++var4) {
+            System.out.print("Enter Element [" + var4 + "] : ");
+            var3[var4] = var1.nextInt();
+         }
+
+         for(var4 = 0; var4 < var2; ++var4) {
+            System.out.print(" " + var3[var4]);
+         }
+
+         findLargsetAndSecond(var3);
+      }
+   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Publication {
+    String title;
+    double price;
+
+    public void getData(String title, double price) {
+        this.title = title;
+        this.price = price;
+    }
+
+     public void print() {
+        System.out.println("Title: " + title + ", Price: LKR " + price);
+    }
+}
+
+ interface Book {
+    int accessionNumber = 0; 
+     void getData(String title, double price, int accessionNumber);
+
+     void print();
+}
+
+ interface Magazine {
+    int volumeNumber = 0;  
+
+     void getData(String title, double price, int volumeNumber);
+
+     void print();
+}
+
+ class Journal extends Publication implements Book, Magazine {
+    int accessionNumber;
+    int volumeNumber;
+    String journalName;
+
+     public Journal(String journalName) {
+        this.journalName = journalName;
+    }
+
+     @Override
+    public void getData(String title, double price, int accessionNumber) {
+        super.getData(title, price);  
+        this.accessionNumber = accessionNumber;
+    }
+
+     public void getMagazineData(String title, double price, int volumeNumber) {
+        super.getData(title, price); 
+        this.volumeNumber = volumeNumber;
+    }
+
+     @Override
+    public void print() {
+        System.out.println("Journal Name: " + journalName);
+        super.print();
+        System.out.println("Accession Number: " + accessionNumber + ", Volume Number: " + volumeNumber);
+    }
+}
+
+public class Q3 {
+    public static void main(String[] args) {
+        
+        Journal journal1 = new Journal("Tech Today");
+        journal1.getData("Tech Today", 100.0, 101);
+        journal1.print();
+    
+        Journal journal2 = new Journal("Science Weekly");
+        journal2.getData("Science Weekly", 150.0, 102);
+        journal2.print();
+    
+        Journal journal3 = new Journal("Health Magazine");
+        journal3.getMagazineData("Health Magazine", 120.0, 103);
+        journal3.print();
+    
+        Journal journal4 = new Journal("Business Insights");
+        journal4.getMagazineData("Business Insights", 200.0, 104);
+        journal4.print();
+    
+        Journal journal5 = new Journal("Literature Review");
+        journal5.getMagazineData("Literature Review", 180.0, 105);
+        journal5.print();
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+class ForwardPrint extends Thread {
+    public void run() { // Corrected method: "run" instead of "printForward"
+        for (int i = 1; i <= 5; i++) {
+            System.out.print(i + " ");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+}
+
+class BackwardPrint extends Thread {
+    public void run() { // Corrected method: "run" instead of "printBackward"
+        for (int i = 5; i >= 1; i--) {
+            System.out.print(i + " ");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+}
+
+class LetterPrint extends Thread {
+    public void run() { // Corrected method: "run" instead of "printLetter"
+        for (char ch = 'a'; ch <= 'f'; ch++) {
+            System.out.print(ch + " ");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+}
+
+public class WithThread {
+    public static void main(String[] args) {
+        Thread fr = new ForwardPrint();
+        Thread bk = new BackwardPrint();
+        Thread lt = new LetterPrint();
+
+        fr.start();
+        bk.start();
+        lt.start();
+
+        try {
+            fr.join();
+            bk.join();
+            lt.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+class ForwardPrint extends Thread {
+    public void run() { // Corrected method: "run" instead of "printForward"
+        for (int i = 1; i <= 5; i++) {
+            System.out.print(i + " ");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+}
+
+class BackwardPrint extends Thread {
+    public void run() { // Corrected method: "run" instead of "printBackward"
+        for (int i = 5; i >= 1; i--) {
+            System.out.print(i + " ");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+}
+
+class LetterPrint extends Thread {
+    public void run() { // Corrected method: "run" instead of "printLetter"
+        for (char ch = 'a'; ch <= 'f'; ch++) {
+            System.out.print(ch + " ");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+}
+
+public class WithThread {
+    public static void main(String[] args) {
+        Thread fr = new ForwardPrint();
+        Thread bk = new BackwardPrint();
+        Thread lt = new LetterPrint();
+
+        fr.start();
+        bk.start();
+        lt.start();
+
+        try {
+            fr.join();
+            bk.join();
+            lt.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
