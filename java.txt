@@ -395,3 +395,107 @@ public class WithThread {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+import java.util.Scanner;
+
+public class SeatSystem {
+
+    public static void main(String[] args) {
+        System.out.println("Seat System");
+
+        String[][] seats = new String[5][8];
+        int seatNumber = 1;
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 8; j++) {
+                seats[i][j] = seatNumber + " ";
+                seatNumber++;
+            }
+        }
+
+        printSeats(seats);
+
+        SeatSystem seatSystem = new SeatSystem();
+        seatSystem.checkSeat(seats);
+
+        System.out.println("Thank you for using the Seat System!");
+    }
+
+    void checkSeat(String[][] seats) {
+        Scanner inputSeat = new Scanner(System.in);  // Scanner initialized once
+        boolean wantAnotherSeat = true;
+
+        while (wantAnotherSeat) {
+            System.out.println("Enter the seat number (1-40): ");
+            int seatNumber = inputSeat.nextInt();
+
+            if (seatNumber < 1 || seatNumber > 40) {
+                System.out.println("Invalid seat number! Please choose a seat between 1 and 40.");
+                continue;
+            }
+
+            boolean isSeatAvailable = false;
+            int row = -1, column = -1;
+
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (seats[i][j].trim().equals(String.valueOf(seatNumber))) {
+                        isSeatAvailable = true;
+                        row = i;
+                        column = j;
+                        break;
+                    }
+                }
+                if (isSeatAvailable) {
+                    break;
+                }
+            }
+
+            if (isSeatAvailable) {
+                System.out.println("Seat is available. Do you want to reserve it? (Y/N)");
+                String reserveSeat = inputSeat.next();
+
+                if (reserveSeat.equalsIgnoreCase("Y")) {
+                    seats[row][column] = "X";
+                    System.out.println("Seat reserved successfully!");
+                } else {
+                    System.out.println("Seat not reserved.");
+                }
+            } else {
+                System.out.println("Seat is already reserved. Please choose another seat.");
+            }
+
+            printSeats(seats);
+
+            System.out.println("Do you want to reserve another seat? (Y/N)");
+            String anotherSeat = inputSeat.next();
+
+            if (!anotherSeat.equalsIgnoreCase("Y")) {
+                wantAnotherSeat = false;
+            }
+        }
+
+        inputSeat.close();  
+    }
+
+    static void printSeats(String[][] seats) {
+        System.out.println("\nCurrent Seat Layout:");
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 8; j++) {
+                System.out.printf("%-4s", seats[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+}
