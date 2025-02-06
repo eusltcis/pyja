@@ -1,3 +1,181 @@
+abstract class Player {
+    int playerId;
+    String name;
+    String country;
+    int[] scores;
+
+    Player(int playerId, String name, String country, int[] scores) {
+        this.name = name;
+        this.playerId = playerId;
+        this.country = country;
+        this.scores = scores;
+    }
+
+    void getPlayerID() {
+        System.out.println("Playerid :  " + playerId);
+
+    }
+
+    void getName() {
+        System.out.println("Player Name : " + name);
+    }
+
+    void getCountry() {
+        System.out.println(" Player Country is : " + country);
+    }
+
+    abstract void addScore(int score);
+
+    abstract void printDetails();
+
+}
+
+class Batsman extends Player {
+    int runs;
+
+    public Batsman(int playerId, String name, String country, int[] scores) {
+        super(playerId, name, country, scores);
+
+        for (int score : scores) {
+            this.runs = runs + score;
+        }
+
+    }
+
+    void getRuns() {
+        System.out.println("Total Ruus of id " + super.playerId + " is : " + runs);
+    }
+
+    void addScore(int score) {
+        int[] temp = new int[scores.length + 1];
+        System.arraycopy(scores, 0, temp, 0, scores.length);
+        temp[scores.length] = score;
+        scores = temp;
+        runs += score;
+
+    }
+
+    void printDetails() {
+        System.out.println("Player Id:" + super.playerId);
+        System.out.println("Player name:" + super.name);
+        System.out.println("Player country:" + super.country);
+        System.out.print("Player scores: ");
+
+        for (int score : super.scores) {
+            System.out.print(score + " ");
+        }
+
+        System.out.println("Total Runs : " + this.runs);
+    }
+
+}
+
+class Bowler extends Player {
+    int wickets;
+
+    public Bowler(int playerId, String name, String country, int[] scores) {
+        super(playerId, name, country, scores);
+
+        for (int score : scores) {
+            this.wickets = wickets + score;
+        }
+    }
+
+    void getWickets() {
+        System.out.println("Total wickets of id " + super.playerId + " is : " + wickets);
+    }
+
+    void addScore(int score) {
+        int[] temp = new int[scores.length + 1];
+        System.arraycopy(scores, 0, temp, 0, scores.length);
+        temp[scores.length] = score;
+        scores = temp;
+        wickets += score;
+    }
+
+    void printDetails() {
+        System.out.println("Player Id:" + super.playerId);
+        System.out.println("Player name:" + super.name);
+        System.out.println("Player country:" + super.country);
+        System.out.print("Player scores: ");
+
+        for (int score : super.scores) {
+            System.out.print(score + " ");
+        }
+
+        System.out.println();
+
+        System.out.println("Total Runs : " + this.wickets);
+    }
+
+}
+
+public class CricketApp {
+
+    public static void main(String[] args) {
+
+        Batsman[] batsmen = {
+                new Batsman(1, "Mike", "India", new int[] { 1, 2, 3 }),
+                new Batsman(2, "ben", "India", new int[] { 1, 4, 5 }),
+                new Batsman(3, "sanga", "Sri Lanka", new int[] { 1, 7, 4 })
+
+        };
+
+        Bowler[] bowlers = {
+                new Bowler(5, "Brook", "India", new int[] { 1, 1, 2, 2 }),
+                new Bowler(6, "Malinga", "Sri Lanka", new int[] { 1, 12 }),
+                new Bowler(7, "cj", "India", new int[] { 1, 2, 2 })
+        };
+
+        Player[] players = {
+                new Batsman(1, "Mike", "Sri Lanka", new int[] { 1, 2, 3 }),
+                new Batsman(2, "ben", "India", new int[] { 1, 4, 5 }),
+                new Batsman(3, "sanga", "Sri Lanka", new int[] { 1, 7, 4 }),
+                new Bowler(5, "Brook", "India", new int[] { 1, 1, 2, 2 }),
+                new Bowler(6, "Malinga", "Sri Lanka", new int[] { 1, 12 }),
+                new Bowler(7, "cj", "India", new int[] { 1, 2, 2 })
+
+        };
+
+        // System.out.println("Player Details : ");
+
+        // for (Player player : players) {
+        // player.printDetails();
+        // }
+
+        // players[1].addScore(14);
+        // players[1].addScore(10);
+        // players[1].printDetails();
+
+        int highestRunsIndex = 0;
+        for (int i = 1; i < batsmen.length; i++) {
+            if (batsmen[i].runs > batsmen[highestRunsIndex].runs) {
+                highestRunsIndex = i;
+            }
+        }
+
+        System.out.println("Player with Highest Runs : " + batsmen[highestRunsIndex].runs);
+        batsmen[highestRunsIndex].printDetails();
+
+        System.out.println("Players From India");
+        for (Batsman bat : batsmen) {
+            if (bat.country.equals("India")) {
+                bat.printDetails();
+            }
+        }
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
 
 class DaysReservationexception extends Exception {
     public DaysReservationexception(String message) {
