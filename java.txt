@@ -1,679 +1,398 @@
-abstract class Player {
-    int playerId;
-    String name;
-    String country;
-    int[] scores;
+#include <iostream>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <vector>
+#include <algorithm>
+#include <cmath>
 
-    Player(int playerId, String name, String country, int[] scores) {
-        this.name = name;
-        this.playerId = playerId;
-        this.country = country;
-        this.scores = scores;
+using namespace std;
+
+bool isPrime(int n) {
+    if (n <= 1) return false;
+    for (int i = 2; i <= sqrt(n); ++i) {
+        if (n % i == 0) return false;
     }
-
-    void getPlayerID() {
-        System.out.println("Playerid :  " + playerId);
-
-    }
-
-    void getName() {
-        System.out.println("Player Name : " + name);
-    }
-
-    void getCountry() {
-        System.out.println(" Player Country is : " + country);
-    }
-
-    abstract void addScore(int score);
-
-    abstract void printDetails();
-
+    return true;
 }
 
-class Batsman extends Player {
-    int runs;
+int main() {
+    int arr[10];
+    cout << "Enter 10 integers: ";
+    for (int i = 0; i < 10; ++i) {
+        cin >> arr[i];
+    }
 
-    public Batsman(int playerId, String name, String country, int[] scores) {
-        super(playerId, name, country, scores);
+    for (int i = 1; i <= 7; ++i) {
+        pid_t pid = fork();
 
-        for (int score : scores) {
-            this.runs = runs + score;
+        if (pid < 0) {
+            cerr << "Fork failed!" << endl;
+            return 1;
         }
-
-    }
-
-    void getRuns() {
-        System.out.println("Total Ruus of id " + super.playerId + " is : " + runs);
-    }
-
-    void addScore(int score) {
-        int[] temp = new int[scores.length + 1];
-        System.arraycopy(scores, 0, temp, 0, scores.length);
-        temp[scores.length] = score;
-        scores = temp;
-        runs += score;
-
-    }
-
-    void printDetails() {
-        System.out.println("Player Id:" + super.playerId);
-        System.out.println("Player name:" + super.name);
-        System.out.println("Player country:" + super.country);
-        System.out.print("Player scores: ");
-
-        for (int score : super.scores) {
-            System.out.print(score + " ");
-        }
-
-        System.out.println("Total Runs : " + this.runs);
-    }
-
-}
-
-class Bowler extends Player {
-    int wickets;
-
-    public Bowler(int playerId, String name, String country, int[] scores) {
-        super(playerId, name, country, scores);
-
-        for (int score : scores) {
-            this.wickets = wickets + score;
-        }
-    }
-
-    void getWickets() {
-        System.out.println("Total wickets of id " + super.playerId + " is : " + wickets);
-    }
-
-    void addScore(int score) {
-        int[] temp = new int[scores.length + 1];
-        System.arraycopy(scores, 0, temp, 0, scores.length);
-        temp[scores.length] = score;
-        scores = temp;
-        wickets += score;
-    }
-
-    void printDetails() {
-        System.out.println("Player Id:" + super.playerId);
-        System.out.println("Player name:" + super.name);
-        System.out.println("Player country:" + super.country);
-        System.out.print("Player scores: ");
-
-        for (int score : super.scores) {
-            System.out.print(score + " ");
-        }
-
-        System.out.println();
-
-        System.out.println("Total Runs : " + this.wickets);
-    }
-
-}
-
-public class CricketApp {
-
-    public static void main(String[] args) {
-
-        Batsman[] batsmen = {
-                new Batsman(1, "Mike", "India", new int[] { 1, 2, 3 }),
-                new Batsman(2, "ben", "India", new int[] { 1, 4, 5 }),
-                new Batsman(3, "sanga", "Sri Lanka", new int[] { 1, 7, 4 })
-
-        };
-
-        Bowler[] bowlers = {
-                new Bowler(5, "Brook", "India", new int[] { 1, 1, 2, 2 }),
-                new Bowler(6, "Malinga", "Sri Lanka", new int[] { 1, 12 }),
-                new Bowler(7, "cj", "India", new int[] { 1, 2, 2 })
-        };
-
-        Player[] players = {
-                new Batsman(1, "Mike", "Sri Lanka", new int[] { 1, 2, 3 }),
-                new Batsman(2, "ben", "India", new int[] { 1, 4, 5 }),
-                new Batsman(3, "sanga", "Sri Lanka", new int[] { 1, 7, 4 }),
-                new Bowler(5, "Brook", "India", new int[] { 1, 1, 2, 2 }),
-                new Bowler(6, "Malinga", "Sri Lanka", new int[] { 1, 12 }),
-                new Bowler(7, "cj", "India", new int[] { 1, 2, 2 })
-
-        };
-
-        // System.out.println("Player Details : ");
-
-        // for (Player player : players) {
-        // player.printDetails();
-        // }
-
-        // players[1].addScore(14);
-        // players[1].addScore(10);
-        // players[1].printDetails();
-
-        int highestRunsIndex = 0;
-        for (int i = 1; i < batsmen.length; i++) {
-            if (batsmen[i].runs > batsmen[highestRunsIndex].runs) {
-                highestRunsIndex = i;
-            }
-        }
-
-        System.out.println("Player with Highest Runs : " + batsmen[highestRunsIndex].runs);
-        batsmen[highestRunsIndex].printDetails();
-
-        System.out.println("Players From India");
-        for (Batsman bat : batsmen) {
-            if (bat.country.equals("India")) {
-                bat.printDetails();
-            }
-        }
-
-    }
-
-}
-
-
-
-
-
-
-
-
-
-
-class DaysReservationexception extends Exception {
-    public DaysReservationexception(String message) {
-        super(message);
-    }
-}
-
-class Hotel {
-    String hotelName;
-    int rank;
-    public static int availableRooms;
-
-    Hotel(String hotelName, int rank, int availableRooms) {
-        this.hotelName = hotelName;
-        this.rank = rank;
-        this.availableRooms = availableRooms;
-    }
-
-}
-
-class Room {
-    int roomId;
-    int price;
-    String type;
-
-    Room(int roomId, String type) {
-        this.roomId = roomId;
-        this.type = type;
-
-        Hotel.availableRooms++;
-
-        if (type.equals("Single")) {
-            this.price = 2000;
-        } else if (type.equals("Double")) {
-            this.price = 3500;
-        } else if (type.equals("Triple")) {
-            this.price = 5000;
-        } else {
-            System.out.println("Invalid Type of room");
-        }
-    }
-
-    void displayRoom() {
-        System.out.println("Room id : " + roomId);
-        System.out.println("Room price : " + price);
-        System.out.println("Room type : " + type);
-    }
-
-}
-
-class Resident {
-    int resId;
-    String name;
-    Room room;
-    int numOfDays;
-    int cost;
-
-    Resident(int resId, String name) {
-        this.resId = resId;
-        this.name = name;
-    }
-
-    void ReserveRoom(Room room, int numOfDays) throws DaysReservationexception {
-
-        if (numOfDays < 0) {
-            throw new DaysReservationexception("Num of days should be Greater than 0 ");
-        }
-
-        this.room = room;
-        this.cost = numOfDays * room.price;
-        Hotel.availableRooms--;
-
-        System.out.println("Available rooms : " + Hotel.availableRooms);
-
-    }
-
-    void displayResident() {
-        System.out.println("res id: " + resId);
-        System.out.println("res name: " + name);
-        room.displayRoom();
-        System.out.println("num of days staying : " + numOfDays);
-        System.out.println("total cost: " + cost);
-    }
-
-}
-
-class HotelManagement {
-
-    public static void main(String[] args) throws DaysReservationexception {
-        Hotel hotel = new Hotel("tceusl", 4, 0);
-
-        Room room1 = new Room(123, "Single");
-        Room room2 = new Room(124, "Double");
-        Room room3 = new Room(125, "Triple");
-
-        Resident res1 = new Resident(122, "Mike");
-        Resident res2 = new Resident(1239, "ben");
-        Resident res3 = new Resident(127, "june");
-
-        res1.ReserveRoom(room1, 5);
-
-    }
-}
-
-
-
-
-
-
-
-
-
-
-// Source code is decompiled from a .class file using FernFlower decompiler.
-import java.util.Scanner;
-
-public class Largest {
-   public Largest() {
-   }
-
-   static void findLargsetAndSecond(int[] var0) {
-      int var1 = var0[0];
-
-      int var2;
-      for(var2 = 1; var2 < var0.length; ++var2) {
-         if (var0[var2] >= var1) {
-            var1 = var0[var2];
-         }
-      }
-
-      System.out.println("Largest Number is : " + var1);
-      var2 = Integer.MIN_VALUE;
-
-      for(int var3 = 1; var3 < var0.length; ++var3) {
-         if (var0[var3] > var2 && var0[var3] != var1) {
-            var2 = var0[var3];
-         }
-      }
-
-      System.out.println("Second largest Number : " + var2);
-   }
-
-   public static void main(String[] var0) {
-      System.out.println("enter the Number of array Elements: ");
-      Scanner var1 = new Scanner(System.in);
-      int var2 = var1.nextInt();
-      if (var2 < 2) {
-         System.out.println("Please enter at least two elements.");
-      } else {
-         int[] var3 = new int[var2];
-         System.out.println("Enter the Elements : ");
-
-         int var4;
-         for(var4 = 0; var4 < var2; ++var4) {
-            System.out.print("Enter Element [" + var4 + "] : ");
-            var3[var4] = var1.nextInt();
-         }
-
-         for(var4 = 0; var4 < var2; ++var4) {
-            System.out.print(" " + var3[var4]);
-         }
-
-         findLargsetAndSecond(var3);
-      }
-   }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class Publication {
-    String title;
-    double price;
-
-    public void getData(String title, double price) {
-        this.title = title;
-        this.price = price;
-    }
-
-     public void print() {
-        System.out.println("Title: " + title + ", Price: LKR " + price);
-    }
-}
-
- interface Book {
-    int accessionNumber = 0; 
-     void getData(String title, double price, int accessionNumber);
-
-     void print();
-}
-
- interface Magazine {
-    int volumeNumber = 0;  
-
-     void getData(String title, double price, int volumeNumber);
-
-     void print();
-}
-
- class Journal extends Publication implements Book, Magazine {
-    int accessionNumber;
-    int volumeNumber;
-    String journalName;
-
-     public Journal(String journalName) {
-        this.journalName = journalName;
-    }
-
-     @Override
-    public void getData(String title, double price, int accessionNumber) {
-        super.getData(title, price);  
-        this.accessionNumber = accessionNumber;
-    }
-
-     public void getMagazineData(String title, double price, int volumeNumber) {
-        super.getData(title, price); 
-        this.volumeNumber = volumeNumber;
-    }
-
-     @Override
-    public void print() {
-        System.out.println("Journal Name: " + journalName);
-        super.print();
-        System.out.println("Accession Number: " + accessionNumber + ", Volume Number: " + volumeNumber);
-    }
-}
-
-public class Q3 {
-    public static void main(String[] args) {
-        
-        Journal journal1 = new Journal("Tech Today");
-        journal1.getData("Tech Today", 100.0, 101);
-        journal1.print();
-    
-        Journal journal2 = new Journal("Science Weekly");
-        journal2.getData("Science Weekly", 150.0, 102);
-        journal2.print();
-    
-        Journal journal3 = new Journal("Health Magazine");
-        journal3.getMagazineData("Health Magazine", 120.0, 103);
-        journal3.print();
-    
-        Journal journal4 = new Journal("Business Insights");
-        journal4.getMagazineData("Business Insights", 200.0, 104);
-        journal4.print();
-    
-        Journal journal5 = new Journal("Literature Review");
-        journal5.getMagazineData("Literature Review", 180.0, 105);
-        journal5.print();
-}
-
-}
-
-
-
-
-
-
-
-
-
-
-class ForwardPrint extends Thread {
-    public void run() { // Corrected method: "run" instead of "printForward"
-        for (int i = 1; i <= 5; i++) {
-            System.out.print(i + " ");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-}
-
-class BackwardPrint extends Thread {
-    public void run() { // Corrected method: "run" instead of "printBackward"
-        for (int i = 5; i >= 1; i--) {
-            System.out.print(i + " ");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-}
-
-class LetterPrint extends Thread {
-    public void run() { // Corrected method: "run" instead of "printLetter"
-        for (char ch = 'a'; ch <= 'f'; ch++) {
-            System.out.print(ch + " ");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-}
-
-public class WithThread {
-    public static void main(String[] args) {
-        Thread fr = new ForwardPrint();
-        Thread bk = new BackwardPrint();
-        Thread lt = new LetterPrint();
-
-        fr.start();
-        bk.start();
-        lt.start();
-
-        try {
-            fr.join();
-            bk.join();
-            lt.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-class ForwardPrint extends Thread {
-    public void run() { // Corrected method: "run" instead of "printForward"
-        for (int i = 1; i <= 5; i++) {
-            System.out.print(i + " ");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-}
-
-class BackwardPrint extends Thread {
-    public void run() { // Corrected method: "run" instead of "printBackward"
-        for (int i = 5; i >= 1; i--) {
-            System.out.print(i + " ");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-}
-
-class LetterPrint extends Thread {
-    public void run() { // Corrected method: "run" instead of "printLetter"
-        for (char ch = 'a'; ch <= 'f'; ch++) {
-            System.out.print(ch + " ");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-}
-
-public class WithThread {
-    public static void main(String[] args) {
-        Thread fr = new ForwardPrint();
-        Thread bk = new BackwardPrint();
-        Thread lt = new LetterPrint();
-
-        fr.start();
-        bk.start();
-        lt.start();
-
-        try {
-            fr.join();
-            bk.join();
-            lt.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-import java.util.Scanner;
-
-public class SeatSystem {
-
-    public static void main(String[] args) {
-        System.out.println("Seat System");
-
-        String[][] seats = new String[5][8];
-        int seatNumber = 1;
-
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 8; j++) {
-                seats[i][j] = seatNumber + " ";
-                seatNumber++;
-            }
-        }
-
-        printSeats(seats);
-
-        SeatSystem seatSystem = new SeatSystem();
-        seatSystem.checkSeat(seats);
-
-        System.out.println("Thank you for using the Seat System!");
-    }
-
-    void checkSeat(String[][] seats) {
-        Scanner inputSeat = new Scanner(System.in);  // Scanner initialized once
-        boolean wantAnotherSeat = true;
-
-        while (wantAnotherSeat) {
-            System.out.println("Enter the seat number (1-40): ");
-            int seatNumber = inputSeat.nextInt();
-
-            if (seatNumber < 1 || seatNumber > 40) {
-                System.out.println("Invalid seat number! Please choose a seat between 1 and 40.");
-                continue;
-            }
-
-            boolean isSeatAvailable = false;
-            int row = -1, column = -1;
-
-            for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 8; j++) {
-                    if (seats[i][j].trim().equals(String.valueOf(seatNumber))) {
-                        isSeatAvailable = true;
-                        row = i;
-                        column = j;
-                        break;
-                    }
+        else if (pid == 0) {
+            // Child processes perform tasks based on their number
+            switch(i) {
+                case 1: {
+                    int sum = 0;
+                    for (int j = 0; j < 10; ++j) sum += arr[j];
+                    cout << "1st Child: Sum of all numbers = " << sum << endl;
+                    break;
                 }
-                if (isSeatAvailable) {
+                case 2: {
+                    int sumEven = 0;
+                    for (int j = 0; j < 10; ++j) if (arr[j] % 2 == 0) sumEven += arr[j];
+                    cout << "2nd Child: Sum of even numbers = " << sumEven << endl;
+                    break;
+                }
+                case 3: {
+                    int sumOdd = 0;
+                    for (int j = 0; j < 10; ++j) if (arr[j] % 2 != 0) sumOdd += arr[j];
+                    cout << "3rd Child: Sum of odd numbers = " << sumOdd << endl;
+                    break;
+                }
+                case 4: {
+                    int sumPrime = 0;
+                    for (int j = 0; j < 10; ++j) if (isPrime(arr[j])) sumPrime += arr[j];
+                    cout << "4th Child: Sum of prime numbers = " << sumPrime << endl;
+                    break;
+                }
+                case 5: {
+                    vector<int> sortedArr(arr, arr + 10);
+                    sort(sortedArr.begin(), sortedArr.end());
+                    cout << "5th Child: Array in ascending order: ";
+                    for (int num : sortedArr) cout << num << " ";
+                    cout << endl;
+                    break;
+                }
+                case 6: {
+                    int maxNum = arr[0];
+                    for (int j = 1; j < 10; ++j) if (arr[j] > maxNum) maxNum = arr[j];
+                    cout << "6th Child: Maximum number in the array = " << maxNum << endl;
+                    break;
+                }
+                case 7: {
+                    int searchNum;
+                    cout << "7th Child: Enter number to search: ";
+                    cin >> searchNum;
+                    bool found = false;
+                    for (int j = 0; j < 10; ++j) {
+                        if (arr[j] == searchNum) {
+                            cout << "7th Child: Number " << searchNum << " found at position " << j + 1 << endl;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) cout << "7th Child: Number " << searchNum << " not found in the array." << endl;
                     break;
                 }
             }
-
-            if (isSeatAvailable) {
-                System.out.println("Seat is available. Do you want to reserve it? (Y/N)");
-                String reserveSeat = inputSeat.next();
-
-                if (reserveSeat.equalsIgnoreCase("Y")) {
-                    seats[row][column] = "X";
-                    System.out.println("Seat reserved successfully!");
-                } else {
-                    System.out.println("Seat not reserved.");
-                }
-            } else {
-                System.out.println("Seat is already reserved. Please choose another seat.");
-            }
-
-            printSeats(seats);
-
-            System.out.println("Do you want to reserve another seat? (Y/N)");
-            String anotherSeat = inputSeat.next();
-
-            if (!anotherSeat.equalsIgnoreCase("Y")) {
-                wantAnotherSeat = false;
-            }
+            _exit(0);  
         }
-
-        inputSeat.close();  
     }
 
-    static void printSeats(String[][] seats) {
-        System.out.println("\nCurrent Seat Layout:");
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 8; j++) {
-                System.out.printf("%-4s", seats[i][j]);
-            }
-            System.out.println();
+    // Parent process displays all elements
+    wait(NULL);  // Wait for all child processes to finish
+    cout << "Parent: The array elements are: ";
+    for (int i = 0; i < 10; ++i) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+
+    // Ensure all child processes finish before the program ends
+    while (wait(NULL) > 0);
+
+    return 0;
+}
+
+
+
+
+
+import java.util.Scanner;
+
+public class PriorityPreemptive {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        // Input number of processes
+        System.out.print("Enter the number of processes: ");
+        int n = in.nextInt();
+
+        int[] pid = new int[n], at = new int[n], bt = new int[n], rt = new int[n], priority = new int[n];
+        int[] ct = new int[n], tat = new int[n], wt = new int[n];
+
+        // Input process details
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter arrival time of process " + (i + 1) + ": ");
+            at[i] = in.nextInt();
+            System.out.print("Enter burst time of process " + (i + 1) + ": ");
+            bt[i] = in.nextInt();
+            System.out.print("Enter priority of process " + (i + 1) + ": ");
+            priority[i] = in.nextInt();
+            rt[i] = bt[i];
+            pid[i] = i + 1;
         }
-        System.out.println();
+
+        int currentTime = 0, completed = 0;
+
+        while (completed < n) {
+            int minIndex = -1;
+            int highestPriority = Integer.MAX_VALUE;
+
+            // Find the process with the highest priority available
+            for (int i = 0; i < n; i++) {
+                if (at[i] <= currentTime && rt[i] > 0 && priority[i] < highestPriority) {
+                    highestPriority = priority[i];
+                    minIndex = i;
+                }
+            }
+
+            if (minIndex == -1) {
+                currentTime++;
+                continue;
+            }
+
+            rt[minIndex]--;
+            currentTime++;
+
+            if (rt[minIndex] == 0) {
+                completed++;
+                ct[minIndex] = currentTime;
+                tat[minIndex] = ct[minIndex] - at[minIndex];
+                wt[minIndex] = tat[minIndex] - bt[minIndex];
+            }
+        }
+
+        // Output process details
+        System.out.println("\nProcess Details:");
+        System.out.println("Process\tAT\tBT\tPri\tCT\tTAT\tWT");
+        for (int i = 0; i < n; i++) {
+            System.out.printf("P%d\t%d\t%d\t%d\t%d\t%d\t%d\n", pid[i], at[i], bt[i], priority[i], ct[i], tat[i], wt[i]);
+        }
     }
 }
+
+
+
+
+
+
+
+import java.util.Scanner;
+
+public class SJFPreemptive {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        // Input number of processes
+        System.out.print("Enter the number of processes: ");
+        int n = in.nextInt();
+
+        int[] pid = new int[n], at = new int[n], bt = new int[n], rt = new int[n];
+        int[] ct = new int[n], tat = new int[n], wt = new int[n];
+
+        // Input process details
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter arrival time of process " + (i + 1) + ": ");
+            at[i] = in.nextInt();
+            System.out.print("Enter burst time of process " + (i + 1) + ": ");
+            bt[i] = in.nextInt();
+            rt[i] = bt[i];
+            pid[i] = i + 1;
+        }
+
+        int currentTime = 0, completed = 0;
+
+        while (completed < n) {
+            int minIndex = -1;
+            int minTime = Integer.MAX_VALUE;
+
+            // Find shortest remaining time process available
+            for (int i = 0; i < n; i++) {
+                if (at[i] <= currentTime && rt[i] > 0 && rt[i] < minTime) {
+                    minTime = rt[i];
+                    minIndex = i;
+                }
+            }
+
+            if (minIndex == -1) {
+                currentTime++;
+                continue;
+            }
+
+            rt[minIndex]--;
+            currentTime++;
+
+            if (rt[minIndex] == 0) {
+                completed++;
+                ct[minIndex] = currentTime;
+                tat[minIndex] = ct[minIndex] - at[minIndex];
+                wt[minIndex] = tat[minIndex] - bt[minIndex];
+            }
+        }
+
+        // Output process details
+        System.out.println("\nProcess\tAT\tBT\tCT\tTAT\tWT");
+        for (int i = 0; i < n; i++) {
+            System.out.printf("P%d\t%d\t%d\t%d\t%d\t%d\n", pid[i], at[i], bt[i], ct[i], tat[i], wt[i]);
+        }
+    }
+}
+
+
+
+
+
+
+
+import java.util.Scanner;
+public class RoundRobin{
+	public static void main(String[]args){
+		Scanner sc=new Scanner(System.in);
+		
+		System.out.println("enter the number of process");
+		int n=sc.nextInt();
+		
+		System.out.println("enter the quantumn");
+		int quantumn=sc.nextInt();
+		
+		int[]AT=new int[n];
+		int[]process=new int[n];
+		int[]BT=new int[n];
+		int[]CT=new int[n];
+		int[]WT=new int[n];
+		int[]TAT=new int[n];
+		int[]RT=new int[n];
+		
+		System.out.println("enter the average time and burst time for each loop");
+		for(int i=0;i<n;i++){
+			process[i]=i+1;
+			
+		System.out.println("\t process"+(i+1)+"Arrival time:");
+		AT[i]=sc.nextInt();
+		
+		System.out.println("\t process"+(i+1)+"Burst time:");
+		BT[i]=sc.nextInt();
+		
+		RT[i]=BT[i];
+		}
+		int time=0;
+		int completed=0;
+		
+		while(completed<n){
+	    boolean executed=false;
+		for(int i=0;i<n;i++){
+			if(AT[i]<=time&&RT[i]>0){
+				executed =true;
+			}
+			if(RT[i]>quantumn){
+				time+=quantumn;
+				RT[i]-=quantumn;
+			}
+			
+			else{
+				time+=RT[i];
+				RT[i]=0;
+				CT[i]=time;
+				TAT[i]=CT[i]-AT[i];
+				WT[i]=TAT[i]-BT[i];
+				completed++;
+			}
+		}
+		}
+		
+/* if(!executed){
+			time++;
+		} */
+		double TTAT=0;
+		double TWT=0;
+		for(int i=0;i<n;i++){
+		TWT+=WT[i];
+		TTAT+=TAT[i];
+		}
+		System.out.println("process\tAT\tBT\tCT\tTAT\tWT\tRT");
+		for(int i=0;i<n;i++){
+			System.out.println(process[i]+"\t"+AT[i]+"\t"+BT[i]+"\t"+CT[i]+"\t"+TAT[i]+"\t"+WT[i]+"\t"+RT[i]+"\t");
+		}
+		System.out.println("\n Average WT:"+(TWT/n));
+		System.out.println("\n Average TAT:"+(TTAT/n));
+	}
+}
+
+
+
+
+
+
+import java.util.Scanner;
+public class FCF{
+	public static void main(String[]args){
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Enter the number of process");
+		
+		int n=sc.nextInt();
+		int[]process=new int[n];
+		int[]AT=new int[n];
+		int[]BT=new int[n];
+		int[]CT=new int[n];
+		int[]TAT=new int[n];
+		int[]WT=new int[n];
+		
+		System.out.println("Enter the average time and burst time for each loop");
+		for(int i=0;i<n;i++){
+			process[i]=i+1;
+			
+			System.out.println("\t process"+(i+1)+"arrival time:");
+			AT[i]=sc.nextInt();
+			
+			System.out.println("\t process"+(i+1)+"burst time:");
+			BT[i]=sc.nextInt();
+			System.out.println();
+		}
+		
+		for(int i=0;i<n-1;i++){
+			for(int j=i+1;j<n;j++){
+				if(AT[i]>AT[j]){
+					int temp=AT[i];
+					AT[i]=AT[j];
+					AT[j]=temp;
+					
+					temp=BT[i];
+					BT[i]=BT[j];
+					BT[j]=temp;
+					
+					temp=process[i];
+					process[i]=process[j];
+					process[j]=temp;
+				}
+			}
+		}
+		for(int i=1;i<n;i++){
+			WT[i]=WT[i-1]+TAT[i-1];
+			if(AT[i]>WT[i]){
+				WT[i]=AT[i]-(WT[i-1]+TAT[i-1]);
+			}
+		}
+			for(int i=0;i<n;i++){
+			TAT[i]=WT[i];
+		}
+		
+		for(int i=0;i<n;i++){
+			CT[i]=AT[i]+TAT[i];
+		}
+		
+		double TTAT=0;
+		double TWT=0;
+		for(int i=0;i<n;i++){
+		TWT+=WT[i];
+		TTAT+=TAT[i];
+		}
+		System.out.println("process\tAT\tBT\tCT\tTAT\tWT");
+		for(int i=0;i<n;i++){
+			System.out.println(process[i]+"\t"+AT[i]+"\t"+BT[i]+"\t"+CT[i]+"\t"+TAT[i]+"\t"+WT[i]+"\t");
+		}
+		System.out.println("\n Average WT:"+(TWT/n));
+		System.out.println("\n Average TAT:"+(TTAT/n));
+	}
+}
+
